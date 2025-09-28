@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Interactive Website - Enhanced</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6a82fb;
+            --secondary-color: #7b42f6;
+            --accent-color: #f093fb;
+            --light-color: #ffffff;
+            --dark-color: #2c3e50;
+            --text-color: #555;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition-fast: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: var(--dark-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s linear, opacity 0.2s;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+        }
+        .cursor-outline {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--primary-color);
+            transition: transform 0.2s ease-out, width 0.3s, height 0.3s;
+        }
+        body:has(a:hover, button:hover, .nav-link:hover, .menu-toggle:hover) .cursor-outline {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: rgba(106, 130, 251, 0.1);
+        }
+
+        /* Animated Background */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            list-style: none;
+            display: block;
+            background: rgba(255, 255, 255, 0.15);
+            animation: animate-shapes 20s linear infinite;
+            bottom: -150px;
+        }
+        .shape:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+        .shape:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .shape:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+        .shape:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .shape:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+        .shape:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+        .shape:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+        .shape:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+        .shape:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+        .shape:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+
+        @keyframes animate-shapes {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            transition: var(--transition-fast);
+        }
+
+        .navbar.scrolled {
+            padding: 0.75rem 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo a { color: inherit; text-decoration: none; }
+
+        .nav-menu { display: flex; list-style: none; gap: 1rem; }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+            transition: var(--transition-fast);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 60%;
+        }
+
+        .menu-toggle {
+            display: none; flex-direction: column; cursor: pointer; gap: 5px;
+        }
+        .menu-toggle span {
+            width: 25px; height: 3px; background: var(--primary-color); border-radius: 2px; transition: var(--transition-fast);
+        }
+
+        /* Main Content */
+        .main-content { margin-top: 100px; padding: 2rem 0; }
+
+        .page {
+            display: none;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            margin: 2rem 0;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition-slow);
+        }
+
+        .page.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        .page.fade-out { animation: fadeOut 0.4s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        .page h1 {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2.5rem;
+            font-size: 2.8rem;
+            text-align: center;
+            position: relative;
+        }
+        .page h1::after {
+            content: ''; position: absolute; bottom: -15px; left: 50%;
+            transform: translateX(-50%); width: 80px; height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        .page h2 { color: var(--secondary-color); margin: 2rem 0 1rem 0; font-size: 1.8rem; }
+        
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Form Styles - Enhanced with floating labels */
+        .form-container {
+            background: var(--light-color); padding: 2.5rem; border-radius: 15px; margin: 2rem 0;
+            border: 1px solid #e0e0e0; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-fast);
+        }
+        .form-container:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); }
+
+        .form-group { margin-bottom: 1.5rem; position: relative; }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 1rem; border: 2px solid #ddd;
+            border-radius: 8px; font-size: 1rem; font-family: 'Poppins', sans-serif;
+            transition: var(--transition-fast); background: #f9f9f9;
+        }
+
+        .form-group label {
+            position: absolute; top: 1rem; left: 1rem;
+            color: var(--text-color); background: #f9f9f9;
+            padding: 0 0.5rem; transition: var(--transition-fast); pointer-events: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none; border-color: var(--primary-color); background: white;
+            box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.1);
+        }
+
+        .form-group input:focus + label, .form-group textarea:focus + label, .form-group select:focus + label,
+        .form-group input:not(:placeholder-shown) + label,
+        .form-group textarea:not(:placeholder-shown) + label,
+        .form-group select:valid + label {
+            top: -0.75rem;
+            left: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            background: white;
+        }
+        /* Special handling for select as it's not empty */
+        .form-group select:valid + label {
+            top: -0.75rem;
+            left: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            background: white;
+        }
+
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white; padding: 0.9rem 2.2rem; border: none; border-radius: 50px;
+            cursor: pointer; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            transition: var(--transition-fast); text-decoration: none; display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Sections (Download, Video) */
+        .download-section, .video-section {
+            padding: 2.5rem; border-radius: 15px; margin: 2rem 0;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .download-section {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            color: white;
+        }
+        .download-section h2 { color: white; }
+        .download-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+
+        .video-container {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            overflow: hidden; border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: var(--transition-fast);
+        }
+        .video-container:hover { transform: scale(1.02); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* Home Page Specific */
+        .welcome-section { text-align: center; padding: 4rem 0 2rem; }
+        .welcome-section h1 {
+            font-size: 3.5rem; margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: textGlow 3s infinite alternate;
+        }
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(106, 130, 251, 0.3); }
+            to { text-shadow: 0 0 20px rgba(106, 130, 251, 0.6); }
+        }
+        .welcome-section p { font-size: 1.3rem; color: var(--text-color); max-width: 700px; margin: 0 auto 2rem auto; }
+
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem; margin-top: 3rem;
+        }
+        .feature-card {
+            background: var(--light-color); padding: 2.5rem 2rem; border-radius: 15px; text-align: center;
+            transition: var(--transition-fast); border: 1px solid #eee;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+        .feature-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); }
+        .feature-card h3 { color: var(--primary-color); margin-bottom: 1rem; font-size: 1.5rem; }
+        .feature-card p { color: var(--text-color); line-height: 1.6; }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 5px;
+            background: transparent; z-index: 1001; pointer-events: none;
+        }
+        .progress-bar {
+            height: 100%; background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            width: 0%; transition: width 0.1s linear;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cursor-dot, .cursor-outline { display: none; }
+            body { cursor: auto; }
+            .menu-toggle { display: flex; }
+            .nav-menu {
+                position: fixed; top: 70px; left: -100%; width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column; align-items: center; justify-content: center;
+                transition: var(--transition-fast); gap: 2rem;
+            }
+            .nav-menu.active { left: 0; }
+            .nav-link { font-size: 1.2rem; }
+            .page { padding: 2rem 1.5rem; }
+            .page h1 { font-size: 2.2rem; }
+            .welcome-section h1 { font-size: 2.5rem; }
+            .download-links { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-shapes">
+        <li class="shape"></li> <li class="shape"></li> <li class="shape"></li> <li class="shape"></li> <li class="shape"></li>
+        <li class="shape"></li> <li class="shape"></li> <li class="shape"></li> <li class="shape"></li> <li class="shape"></li>
+    </div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <h1 class="logo"><a href="#home" onclick="showPage('home')">ModernSite</a></h1>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#home" class="nav-link active" onclick="showPage('home', event)">Home</a></li>
+                    <li><a href="#services" class="nav-link" onclick="showPage('services', event)">Services</a></li>
+                    <li><a href="#products" class="nav-link" onclick="showPage('products', event)">Products</a></li>
+                    <li><a href="#about" class="nav-link" onclick="showPage('about', event)">About</a></li>
+                    <li><a href="#contact" class="nav-link" onclick="showPage('contact', event)">Contact</a></li>
+                </ul>
+                <div class="menu-toggle" id="menuToggle">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+           
+            <div id="home" class="page active">
+                <div class="welcome-section">
+                    <h1>Welcome to Our Modern Website</h1>
+                    <p>Discover amazing products and services with us. Navigate through our pages to explore more!</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card reveal">
+                        <h3>Services</h3>
+                        <p>Explore our comprehensive range of professional services designed to meet your needs.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.1s;">
+                        <h3>Products</h3>
+                        <p>Check out our latest products with detailed information and specifications.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.2s;">
+                        <h3>About Us</h3>
+                        <p>Learn more about our company, mission, and the team behind our success.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.3s;">
+                        <h3>Contact</h3>
+                        <p>Get in touch with us for inquiries, support, or partnership opportunities.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="services" class="page">
+                <h1>Our Services</h1>
+                <div class="form-container reveal">
+                    <h2>Service Inquiry Form</h2>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" id="service-name" name="name" required placeholder=" ">
+                            <label for="service-name">Your Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="service-email" name="email" required placeholder=" ">
+                             <label for="service-email">Email Address</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="service-type" name="service" required>
+                                <option value="" disabled selected></option>
+                                <option value="web-development">Web Development</option>
+                                <option value="mobile-app">Mobile App Development</option>
+                                <option value="consulting">IT Consulting</option>
+                                <option value="maintenance">System Maintenance</option>
+                            </select>
+                            <label for="service-type">Service Type</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="service-message" name="message" rows="4" required placeholder=" "></textarea>
+                            <label for="service-message">Project Details</label>
+                        </div>
+                        <button type="submit" class="btn">Submit Inquiry</button>
+                    </form>
+                </div>
+                <div class="download-section reveal">
+                    <h2>Download Resources</h2>
+                    <p>Get our service brochure and detailed PDF guide</p>
+                    <div class="download-links">
+                        <a href="#" class="btn" onclick="downloadFile('services-brochure.pdf')">📄 Download Brochure</a>
+                        <a href="#" class="btn" onclick="downloadFile('services-guide.pdf')">📋 Download PDF Guide</a>
+                    </div>
+                </div>
+                <div class="video-section reveal">
+                    <h2>Watch Our Services Overview</h2>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="products" class="page">
+                 <h1>Our Products</h1>
+                <div class="form-container reveal">
+                    <h2>Product Interest Form</h2>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" id="product-name" name="name" required placeholder=" ">
+                            <label for="product-name">Your Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="product-email" name="email" required placeholder=" ">
+                            <label for="product-email">Email</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="product-category" name="category" required>
+                                <option value="" disabled selected></option>
+                                <option value="software">Software Solutions</option>
+                                <option value="hardware">Hardware Products</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="support">Support Services</option>
+                            </select>
+                            <label for="product-category">Product Category</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="product-budget" name="budget" placeholder="e.g., $1000-$5000">
+                            <label for="product-budget">Budget Range</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="product-requirements" name="requirements" rows="4" required placeholder=" "></textarea>
+                            <label for="product-requirements">Requirements</label>
+                        </div>
+                        <button type="submit" class="btn">Submit Request</button>
+                    </form>
+                </div>
+                <div class="download-section reveal">
+                    <h2>Product Documentation</h2>
+                    <p>Access our complete product catalog and technical specifications</p>
+                    <div class="download-links">
+                        <a href="#" class="btn" onclick="downloadFile('product-catalog.pdf')">🛍️ Product Catalog</a>
+                        <a href="#" class="btn" onclick="downloadFile('technical-specs.pdf')">⚙️ Technical Specs PDF</a>
+                    </div>
+                </div>
+                <div class="video-section reveal">
+                    <h2>Product Demonstration</h2>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/ScMzIvxBSi4" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div id="about" class="page">
+                <h1>About Us</h1>
+                <div class="form-container reveal">
+                    <h2>Feedback Form</h2>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" id="feedback-name" name="name" required placeholder=" ">
+                            <label for="feedback-name">Your Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="feedback-email" name="email" required placeholder=" ">
+                            <label for="feedback-email">Email</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="feedback-rating" name="rating" required>
+                                <option value="" disabled selected></option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Very Good</option>
+                                <option value="3">⭐⭐⭐ Good</option>
+                                <option value="2">⭐⭐ Fair</option>
+                                <option value="1">⭐ Poor</option>
+                            </select>
+                            <label for="feedback-rating">Overall Rating</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="feedback-type" name="type" required>
+                                <option value="" disabled selected></option>
+                                <option value="general">General Feedback</option>
+                                <option value="suggestion">Suggestion</option>
+                                <option value="complaint">Complaint</option>
+                                <option value="compliment">Compliment</option>
+                            </select>
+                            <label for="feedback-type">Feedback Type</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="feedback-message" name="message" rows="5" required placeholder=" "></textarea>
+                            <label for="feedback-message">Your Feedback</label>
+                        </div>
+                        <button type="submit" class="btn">Submit Feedback</button>
+                    </form>
+                </div>
+                <div class="download-section reveal">
+                    <h2>Company Information</h2>
+                    <p>Learn more about our company with our informational materials</p>
+                    <div class="download-links">
+                        <a href="#" class="btn" onclick="downloadFile('company-brochure.pdf')">🏢 Company Brochure</a>
+                        <a href="#" class="btn" onclick="downloadFile('annual-report.pdf')">📊 Annual Report PDF</a>
+                    </div>
+                </div>
+                <div class="video-section reveal">
+                    <h2>Our Company Story</h2>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/M7lc1UVf-VE" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contact" class="page">
+                <h1>Contact Us</h1>
+                <div class="form-container reveal">
+                    <h2>Get In Touch</h2>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" id="contact-name" name="name" required placeholder=" ">
+                            <label for="contact-name">Full Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="contact-email" name="email" required placeholder=" ">
+                            <label for="contact-email">Email Address</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="contact-phone" name="phone" placeholder=" ">
+                            <label for="contact-phone">Phone Number (Optional)</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="contact-subject" name="subject" required placeholder=" ">
+                            <label for="contact-subject">Subject</label>
+                        </div>
+                        <div class="form-group">
+                            <select id="contact-priority" name="priority" required>
+                                <option value="" disabled selected></option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                            <label for="contact-priority">Priority</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="contact-message" name="message" rows="6" required placeholder=" "></textarea>
+                            <label for="contact-message">Message</label>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+                 <div class="download-section reveal">
+                    <h2>Contact Information</h2>
+                    <p>Download our contact details and office locations</p>
+                    <div class="download-links">
+                        <a href="#" class="btn" onclick="downloadFile('contact-info.pdf')">📞 Contact Information</a>
+                        <a href="#" class="btn" onclick="downloadFile('office-locations.pdf')">📍 Office Locations PDF</a>
+                    </div>
+                </div>
+                <div class="video-section reveal">
+                    <h2>How to Reach Us</h2>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/ZZ5LpwO-An4" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- START OF MODIFIED CODE ---
+
+        // Lists of random PDF filenames for the demo
+        const generalPdfs = [
+            'corporate_analysis_q3_2025.pdf',
+            'market_research_summary.pdf',
+            'technical_whitepaper_v2.1.pdf',
+            'annual_stakeholder_report_2024.pdf',
+            'product_spec_sheet_XT500.pdf'
+        ];
+
+        const brochurePdfs = [
+            'tri-fold_product_brochure_Fall_2025.pdf',
+            'corporate_services_overview.pdf',
+            'event_showcase_brochure.pdf'
+        ];
+
+        // Modified download function for random files
+        function downloadFile(requestedFile) {
+            let fileToDownload;
+
+            // Check if the requested file is a brochure based on its name
+            if (requestedFile.toLowerCase().includes('brochure')) {
+                // Select a random brochure from the brochurePdfs array
+                const randomIndex = Math.floor(Math.random() * brochurePdfs.length);
+                fileToDownload = brochurePdfs[randomIndex];
+            } else {
+                // Select a random general PDF from the generalPdfs array
+                const randomIndex = Math.floor(Math.random() * generalPdfs.length);
+                fileToDownload = generalPdfs[randomIndex];
+            }
+
+            // For demo purposes, show an alert with the randomly selected filename
+            alert('Download started for: ' + fileToDownload + '\n\nNote: This is a demo. A random file was selected as requested.');
+        }
+
+        // --- END OF MODIFIED CODE ---
+
+
+        // Smooth page transitions
+        function showPage(pageId, event) {
+            if (event) event.preventDefault();
+            const currentPage = document.querySelector('.page.active');
+            const nextPage = document.getElementById(pageId);
+            
+            if (currentPage && currentPage.id !== pageId) {
+                currentPage.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    currentPage.classList.remove('active', 'fade-out');
+                    nextPage.classList.add('active');
+                    window.scrollTo(0, 0); // Scroll to top of new page
+                }, 400); // Match animation duration
+            } else if (!currentPage) {
+                 nextPage.classList.add('active');
+            }
+
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${pageId}`) {
+                    link.classList.add('active');
+                }
+            });
+           
+            // Close mobile menu if open
+            const navMenu = document.getElementById('navMenu');
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                toggleHamburgerIcon(false);
+            }
+        }
+        
+        function toggleHamburgerIcon(isActive) {
+            const spans = document.getElementById('menuToggle').querySelectorAll('span');
+            if (isActive) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission handling
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Form submitted successfully!\n\nNote: This is a demo. In a real website, this would send the form data to your server.');
+                    form.reset();
+                });
+            });
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            menuToggle.addEventListener('click', function() {
+                const isActive = navMenu.classList.toggle('active');
+                toggleHamburgerIcon(isActive);
+            });
+
+            // Navbar scroll effect & Progress bar
+            const navbar = document.getElementById('navbar');
+            const progressBar = document.getElementById('progressBar');
+            window.addEventListener('scroll', function() {
+                // Navbar
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+                
+                // Progress bar
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                progressBar.style.width = scrolled + '%';
+            });
+            
+            // Custom Cursor
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            window.addEventListener('mousemove', function(e) {
+                cursorDot.style.left = e.clientX + 'px';
+                cursorDot.style.top = e.clientY + 'px';
+                cursorOutline.style.left = e.clientX + 'px';
+                cursorOutline.style.top = e.clientY + 'px';
+            });
+            
+            // Scroll Reveal Animation with Intersection Observer
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Optional: stop observing once visible
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
